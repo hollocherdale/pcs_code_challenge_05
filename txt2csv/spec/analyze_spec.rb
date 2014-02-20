@@ -64,14 +64,13 @@ describe "analyze" do
 
   # specify what the options and STDIN and STDOUT are supposed to do
 
-  it "reads a file and prints a hash of prefixes when given the -p option" do
-
-    `ruby lib/analyze.rb -p <spec/testfile.txt >spec/histogram.txt`
-    IO.read('spec/histogram.txt').should == IO.read('spec/expected_prefixes.txt')
+  it "it runs thor analyze method and creates a histogram of prefixes" do
+    `thor txt2csv analyze -p -i textfile.txt -o prefix_histogram.txt`
+    IO.read('spec/prefix_histogram.txt').should == IO.read('spec/expected_prefixes.txt')
   end
 
-  it "reads a file and prints a hash of suffixes when given the -s option" do
-    `ruby lib/analyze.rb -s <spec/testfile.txt >spec/histogram.txt`
-    IO.read('spec/histogram.txt').should == IO.read('spec/expected_suffixes.txt')
+  it "it runs thor analyze method and creates a histogram of suffixes" do
+    `thor txt2csv analyze -s -i textfile.txt -o suffix_histogram.txt`
+    IO.read('spec/prefix_histogram.txt').should == IO.read('spec/expected_suffixes.txt')
   end
 end
