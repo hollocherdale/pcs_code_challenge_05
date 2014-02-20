@@ -1,13 +1,5 @@
 #! /usr/bin/env ruby
 
-
-# This script takes a required option
-#  -p : find and sort prefixes by frequency of occurances
-#  -s : find and sort suffixes by frequency of occurances
-#
-# It reads a text file from STDIN
-# It writes the resulting histogram to STDOUT
-
 case ARGV[0]
   when '-p'
     regular_expression = /^\S*/
@@ -19,7 +11,7 @@ case ARGV[0]
     exit
 end
 
-ARGV.clear # throw away option so we can get to STDIN
+ARGV.clear
 
 histogram = Hash.new(0)
 
@@ -30,6 +22,3 @@ end
 
 histogram = Hash[ histogram.sort_by { |word, count| count }.reverse]
 histogram.each { |word, count| puts "#{word} #{count}" }
-
-
-
