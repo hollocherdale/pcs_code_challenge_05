@@ -1,0 +1,33 @@
+#!/usr/bin/env ruby
+# this first line is how the operating system knows to use ruby to execute this file
+# use chmod oug+x txt2csv to make sure the file is executable
+require 'thor'
+
+class Txt2csv < Thor
+  desc "analyze", "analyze stuff and output things"
+  option :i, aliases: ['--input']
+  option :o, aliases: ['--output']
+  option :s, aliases: ['--suffix']
+  option :p, aliases: ['--prefix']
+  def analyze
+    if option[:p]
+      regex = /^\S*/
+    elsif option[:s]
+      regex = /\S*$/
+    else
+       puts "You're broken"
+    end
+    histogram = Hash.new(0)
+    File.readlines(options[:i]) do |line|
+      line_array = line.split("\t")
+      name = line_array.shift
+      matched_name = regex.match(name).to_s
+      histrogram[matched_name.to_sym] += 1
+    end
+    histogram.sort_by {|k, v| v}.reverse!
+    File.open(options[:o]) do |file|
+      histrogram.each {|key, value| puts "#{key} #{value}"}
+    end
+  end
+end
+Txt2csv.start
