@@ -29,6 +29,21 @@ class Txt2csv < Thor
   	else
   		"You don't know what you're doing do you?"
   	end
+  end
 
+  desc "convert", "convert stuff and output things"
+  option :i, aliases: ['--input']
+  option :o, aliases: ['--output']
+  option :s, aliases: ['--suffix']
+  option :p, aliases: ['--prefix']
+
+  def convert(name)
+    if options[:p]
+      #call prefix parse method from Parse.rb
+    elsif options[:s]
+      #call suffix parse method from Parse.rb
+    else
+      "You don't know what you're doing do you?"
+    end
   end
 end
