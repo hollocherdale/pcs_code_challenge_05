@@ -10,9 +10,9 @@ class Txt2csv < Thor
   option :s, aliases: ['--suffix']
   option :p, aliases: ['--prefix']
   def analyze
-    if option[:p]
+    if options[:p]
       regex = /^\S*/
-    elsif option[:s]
+    elsif options[:s]
       regex = /\S*$/
     else
        puts "You're broken"
@@ -24,10 +24,10 @@ class Txt2csv < Thor
       matched_name = regex.match(name).to_s
       histrogram[matched_name.to_sym] += 1
     end
-    histogram.sort_by {|k, v| v}.reverse!
-    File.open(options[:o]) do |file|
-      histrogram.each {|key, value| puts "#{key} #{value}"}
-    end
+    histogram.sort_by {|k, v| v}.reverse
+    output_file = File.new(options[:o], "w+")
+    output_file.puts(histogram.each {|key, value| puts "#{key} #{value}"})
+    output_file.close
   end
 end
 Txt2csv.start
