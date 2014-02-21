@@ -18,11 +18,11 @@ class Txt2csv < Thor
        puts "You're broken"
     end
     histogram = Hash.new(0)
-    File.readlines(options[:i]) do |line|
+    File.open(options[:i]).each_line do |line|
       line_array = line.split("\t")
       name = line_array.shift
       matched_name = regex.match(name).to_s
-      histrogram[matched_name.to_sym] += 1
+      histogram[matched_name.to_sym] += 1
     end
     histogram.sort_by {|k, v| v}.reverse!
     output_file = File.new(options[:o], "w+")
