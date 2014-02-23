@@ -4,11 +4,12 @@
 require 'thor'
 
 class Txt2csv < Thor
-  desc "analyze", "analyze stuff and output things"
-  option :i, aliases: ['--input']
-  option :o, aliases: ['--output']
-  option :s, aliases: ['--suffix']
-  option :p, aliases: ['--prefix']
+  class_option :i, aliases: ['--input']
+  class_option :o, aliases: ['--output']
+  class_option :s, aliases: ['--suffix']
+  class_option :p, aliases: ['--prefix']
+
+  desc "analyze", "analyze customer data and output names histogram"
   def analyze
     if options[:p]
       regex = /^\S*/
@@ -27,7 +28,21 @@ class Txt2csv < Thor
     histogram.sort_by {|k, v| v}.reverse!
     output_file = File.new(options[:o], "w+")
     output_file.puts(histogram.each {|key, value| puts "#{key} #{value}"})
-    output_file.close
+  end
+  # Get the input filename from the command line interface, and open the file for reading
+# Get the prefix and suffix histogram files from the command line interface and open them.
+# Read the histogram files to create prefix and suffix words arrays. 
+# 
+# Get the output filename from the command line interface and open a CSV file for writing
+# Write the column headers to the file
+# For each line in the incoming file,
+#   Split the line on tabs,
+#   Hand each field to the appropriate method. Use the word arrays for the name parser.
+#   collect the arrays returned from the methods
+#   output the concatenated arrays as a string to the CSV file
+# Close all open files
+  def convert
+
   end
 end
 Txt2csv.start
