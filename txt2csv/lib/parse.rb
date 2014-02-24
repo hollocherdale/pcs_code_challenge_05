@@ -15,9 +15,9 @@ class Parse
     [twitter.match(data).to_s]
   end
 
-  def self.parse_email(eaddress)
-    email = /\w+\@\w+\.\w+/
-    email.match(eaddress) ? [email.match(eaddress).to_s] : ['Not Found']
+  def self.parse_email(email_string)
+    email_regex = /\w+\@\w+\.\w+/
+    email_regex.match(email_string) ? [email_string] : ['Not Found']
   end
 
   def self.parse_numbers(numbers)

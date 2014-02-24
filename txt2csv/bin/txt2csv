@@ -2,6 +2,7 @@
 # this first line is how the operating system knows to use ruby to execute this file
 # use chmod oug+x txt2csv to make sure the file is executable
 require 'thor'
+require 'csv'
 require_relative '../lib/parse'
 
 class Txt2csv < Thor
@@ -26,29 +27,31 @@ class Txt2csv < Thor
       matched_name = regex.match(name_string).to_s
       histogram[matched_name.to_sym] += 1
     end
-    histogram = histogram.sort_by {|k, v| v}.reverse
+    sorted_histogram = histogram.sort_by {|k, v| v}.reverse
     output_file = File.new(options[:o], "w+")
-    output_file.puts(histogram.each {|x| puts x})
+    output_file.puts(sorted_histogram.each {|x| puts x})
 #I cannot figure out how to get this to output ['name', #] per line.
   end
 
   desc "convert", "convert customer data into CSV"
   def convert
+
     p_array = []
     s_array = []
+
     File.open(options[:p]).each_line { |x| p_array << x }
     File.open(options[:s]).each_line { |x| s_array << x }
 
-    CSV.open(options[:o]) do |csv|
+    CSV.open(options[:o], 'w+') do |csv|
       File.open(options[:i]).each_line do |line|
         line_array = line.split("\t")
         name_string = line_array.shift
         one_line = []
-        one_line << parse_names(p_array, s_array, name_string)
-        one_line << parse_numbers(line_array.shift)
-        one_line << parse_twitter(line_array.shift)
-        one_line << parse_email(line_array)
-        csv << one_line
+        one_line << Parse.parse_names(p_array, s_array, name_string)
+        one_line << Parse.parse_numbers(line_array.shift)
+        one_line << Parse.parse_twitter(line_array.shift)
+        one_line << Parse.parse_email(line_array.first.chomp)
+        csv << one_line.join(" ")
       end
     end
   end
