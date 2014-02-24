@@ -27,10 +27,9 @@ class Txt2csv < Thor
       matched_name = regex.match(name_string).to_s
       histogram[matched_name.to_sym] += 1
     end
-    sorted_histogram = histogram.sort_by {|k, v| v}.reverse
+    sorted_histogram = Hash[histogram.sort_by {|k, v| v}.reverse]
     output_file = File.new(options[:o], "w+")
-    output_file.puts(sorted_histogram.each {|x| puts x})
-#I cannot figure out how to get this to output ['name', #] per line.
+    sorted_histogram.each {|k, v| output_file.puts("#{k} #{v}")}
   end
 
   desc "convert", "convert customer data into CSV"
@@ -39,8 +38,8 @@ class Txt2csv < Thor
     p_array = []
     s_array = []
 
-    File.open(options[:p]).each_line { |x| p_array << x }
-    File.open(options[:s]).each_line { |x| s_array << x }
+    File.open(options[:p]).each_line { |line| p_array << line.split.shift }
+    File.open(options[:s]).each_line { |line| s_array << line.split.shift }
 
     CSV.open(options[:o], 'w+') do |csv|
       File.open(options[:i]).each_line do |line|
@@ -51,7 +50,7 @@ class Txt2csv < Thor
         one_line << Parse.parse_numbers(line_array.shift)
         one_line << Parse.parse_twitter(line_array.shift)
         one_line << Parse.parse_email(line_array.first.chomp)
-        csv << one_line.join(" ")
+        csv << one_line.flatten
       end
     end
   end
@@ -60,4 +59,4 @@ Txt2csv.start
 
 #bin/txt2csv analyze -i lib/raw_customers.txt -o prefix_histogram.txt -p
 #bin/txt2csv analyze -i lib/raw_customers.txt -o suffix_histogram.txt -s
-#bin/txt2csv convert -p exp_prefix_histogram.txt -s exp_suffix_histogram.txt -i textfile.txt -o namefile.csv
+#bin/txt2csv convert -p prefix_histogram.txt -s suffix_histogram.txt -i raw_customers.txt -o namefile.csv
