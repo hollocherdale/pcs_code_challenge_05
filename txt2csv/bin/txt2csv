@@ -20,6 +20,7 @@ class Txt2csv < Thor
     else
        puts "You're broken"
     end
+
     histogram = Hash.new(0)
     File.open(options[:i]).each_line do |line|
       line_array = line.split("\t")
@@ -27,6 +28,7 @@ class Txt2csv < Thor
       matched_name = regex.match(name_string).to_s
       histogram[matched_name.to_sym] += 1
     end
+    
     sorted_histogram = Hash[histogram.sort_by {|k, v| v}.reverse]
     output_file = File.new(options[:o], "w+")
     sorted_histogram.each {|k, v| output_file.puts("#{k} #{v}")}
@@ -41,7 +43,7 @@ class Txt2csv < Thor
     File.open(options[:p]).each_line { |line| p_array << line.split.shift }
     File.open(options[:s]).each_line { |line| s_array << line.split.shift }
 
-    CSV.open(options[:o], 'w+') do |csv|
+    CSV.open(options[:o], 'w+', :write_headers => true, :headers => ["Prefix","First Name","Middle Name", "Last Name", "Suffix", "Country Code", "Area Code", "Prefix", "Line", "Extension", "Twitter", "Email"]) do |csv|
       File.open(options[:i]).each_line do |line|
         line_array = line.split("\t")
         name_string = line_array.shift
@@ -56,7 +58,3 @@ class Txt2csv < Thor
   end
 end
 Txt2csv.start
-
-#bin/txt2csv analyze -i lib/raw_customers.txt -o prefix_histogram.txt -p
-#bin/txt2csv analyze -i lib/raw_customers.txt -o suffix_histogram.txt -s
-#bin/txt2csv convert -p prefix_histogram.txt -s suffix_histogram.txt -i raw_customers.txt -o namefile.csv

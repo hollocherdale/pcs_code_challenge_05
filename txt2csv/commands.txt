@@ -1,0 +1,3 @@
+bin/txt2csv analyze -i lib/raw_customers.txt -o prefix_histogram.txt -p
+bin/txt2csv analyze -i lib/raw_customers.txt -o suffix_histogram.txt -s
+bin/txt2csv convert -p prefix_histogram.txt -s suffix_histogram.txt -i lib/raw_customers.txt -o namefile.csv

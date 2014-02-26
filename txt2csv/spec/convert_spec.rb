@@ -21,23 +21,25 @@ def create_prefix_expected_file (filename)
   # Note sort order - by count, not by word
   File.open(filename, "w") do |f|
     f.puts "Mrs. 12"
-    f.puts "Claud 10"
-    f.puts "Keara 6"
-    f.puts "Daren 4"
-    f.puts "Davion 3"
-    f.puts "Ciara 2"
   end
 end
 
 def create_suffix_expected_file (filename)
   File.open(filename, "w") do |f|
-    f.puts "Auer 10"
-    f.puts "Parisian 7"
-    f.puts "Maggio 6"
-    f.puts "Stamm 5"
     f.puts "DVM 4"
-    f.puts "Streich 3"
     f.puts "II 2"
+  end
+end
+
+def create_expected_csv_file (filename)
+  File.open(filename, "w") do |f|
+    f.puts "Mrs.,Theresa,E.,Stamm,"",1,678,523,6736,"",Reinger,kieran@runte.biz"
+    f.puts """,Keara,"",Maggio,"",1,399,471,4388,9581,Weber,cayla@lubowitz.com"
+    f.puts """,Daren,S.,Padberg,DVM,"",240,399,5583,73790,Hessel,augusta@stoltenberg.com"
+    f.puts """,Claud,"",Auer,"","",561,024,9548,165,Mraz,jettie_friesen@weber.com"
+    f.puts "Mrs.,Sam,"",Parisian,"","",818,657,9309,5633,Quigley,lavon.quitzon@schinnercain.biz"
+    f.puts """,Ciara,X.,Windler,II,"",575,225,1469,240,Labadie,ryan_moore@hagenesmiller.com"
+    f.puts """,Davion,G.,Streich,"","",333,783,4674,18711,Schneider,ole.bashirian@murazikmonahan.org"
   end
 end
 
@@ -64,13 +66,10 @@ describe "analyze" do
 
   # specify what the options and STDIN and STDOUT are supposed to do
 
-  it "it runs thor analyze method and creates a histogram of prefixes" do
-    `bin/txt2csv analyze -i spec/testfile.txt -o spec/prefix_histogram.txt -p`
-    IO.read('spec/prefix_histogram.txt').should == IO.read('spec/expected_prefixes.txt')
-  end
-
-  it "it runs thor analyze method and creates a histogram of suffixes" do
-    `bin/txt2csv analyze -i spec/testfile.txt -o spec/suffix_histogram.txt -s`
-    IO.read('spec/suffix_histogram.txt').should == IO.read('spec/expected_suffixes.txt')
+  it "it runs thor convert method and creates a CSV of test customer data" do
+    `bin/txt2csv convert -p prefix_histogram.txt -s suffix_histogram.txt -i spec/testfile.txt -o spec/namefile.csv -s`
+    IO.read('spec/namefile.csv').should == IO.read('spec/expected_suffixes.txt')
   end
 end
+
+bin/txt2csv convert -p prefix_histogram.txt -s suffix_histogram.txt -i lib/raw_customers.txt -o namefile.csv
