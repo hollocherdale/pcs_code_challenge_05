@@ -5,7 +5,7 @@ require 'spec_helper'
 #   1) so that the test can be run on its own and
 #   2) so the contents of the file are clear
 
-def create_test_file (filename)
+def analyze_create_test_file (filename)
   File.open(filename, "w") do |f|
     5.times  {f.puts "Mrs. Theresa E. Stamm\t1-678-523-6736\tReinger\tkieran@runte.biz"}
     6.times  {f.puts "Keara Maggio\t1-399-471-4388 x9581\t@weber\tcayla@lubowitz.com"}
@@ -17,7 +17,7 @@ def create_test_file (filename)
  end
 end
 
-def create_prefix_expected_file (filename)
+def analyze_create_prefix_expected_file (filename)
   # Note sort order - by count, not by word
   File.open(filename, "w") do |f|
     f.puts "Mrs. 12"
@@ -29,7 +29,7 @@ def create_prefix_expected_file (filename)
   end
 end
 
-def create_suffix_expected_file (filename)
+def analyze_create_suffix_expected_file (filename)
   File.open(filename, "w") do |f|
     f.puts "Auer 10"
     f.puts "Parisian 7"
@@ -47,9 +47,9 @@ describe "analyze" do
   # put them down in the spec folder so they don't clutter the project root folder
 
   before(:all) do
-    create_test_file 'spec/testfile.txt'
-    create_prefix_expected_file 'spec/expected_prefixes.txt'
-    create_suffix_expected_file 'spec/expected_suffixes.txt'
+    analyze_create_test_file 'spec/testfile.txt'
+    analyze_create_prefix_expected_file 'spec/expected_prefixes.txt'
+    analyze_create_suffix_expected_file 'spec/expected_suffixes.txt'
   end
 
   # clean up after ourselves
